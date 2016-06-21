@@ -1,0 +1,77 @@
+{% extends "snctrd/layout.html" %}
+{% block title %}
+주문요약정보
+{% endblock %}
+
+{% block content%}
+
+<script>
+    var totQty = 0;
+    var totAmount = 0;
+</script>
+
+
+<div class="container">
+    <h1>{{meeting.mtname}}</h1>
+    <br>
+    <h4>매장 : <b>{{meeting.shop.name}}</b></h4>
+    <table id="orderTable" class="table table-striped">
+        <thead>
+        <tr>
+            <th><b>메뉴</b></th>
+            <th><b>수량</b></th>
+            <th><b>금액</b></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for order in orderList %}
+        <script>
+            var jsonData = '{{order|safe}}';
+            var obj = JSON.parse(jsonData);
+            
+            htmlTag = "<tr>";
+            htmlTag += '<td>' + obj['menu'] + '</td>';
+            htmlTag += '<td>' + obj['qty'] + '개</td>';
+            htmlTag += '<td>' + obj['price'] + '원</td>';
+            htmlTag += "</tr>"
+            
+            totQty += obj['qty'];
+            totAmount += obj['price'];
+            
+            $("#orderTable").append(htmlTag);
+        </script>
+        {% endfor %}
+
+        <script>
+            htmlTag = "<tr>";
+            htmlTag += '<td><font color="red"><b>' + 'Total' + '</b></font></td>';
+            htmlTag += '<td><font color="red"><b>' + totQty + '개</b></font></td>';
+            htmlTag += '<td><font color="red"><b>' + totAmount + '원</b></font</td>';
+            htmlTag += "</tr>"
+            $("#orderTable").append(htmlTag);
+        </script>
+
+        <tbody>
+    </table>
+    <br><br>
+    <b># 비고정보</b>
+    <table id="orderNote" class="table table-striped">
+        <thead>
+        <tr>
+            <th>이름</th>
+            <th>비고</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for order in orders %}
+            {% if order.note %}
+            <tr>
+                <td>{{order.membername}}</td>
+                <td>{{order.menu.name}} / {{order.note}}</td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+        <tbody>
+    </table>
+</div>
+{% endblock %}

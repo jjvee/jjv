@@ -1,0 +1,164 @@
+{% extends "snctrd/layout.html" %}
+{% block title %}
+음료주문
+{% endblock %}
+
+{% block content%}
+
+<script>
+    $(function() {
+        $('#createOrder').click(function(event) {
+            event.preventDefault();
+            
+            var membername = $('#membername').val();
+            var menuid = $('#menu').val();
+            var quantity = $('#quantity').val();
+            var note = $('#note').val();
+            var meetingid = $('#meetingid').val();
+            var amount = $('#amount').val();
+            
+            if (membername == '') {
+                alert('이름은 필수입니다');
+                return false;
+            } else if( membername == 'etc') {
+                membername = $('#membername_etc').val();
+            }
+            
+            $.ajax({
+				type : 'POST',
+				url : '/createOrder/',
+				data : {
+					membername : membername,
+					menuid : menuid,
+					quantity : quantity,
+					amount : amount,
+					note : note,
+					meetingid : meetingid,
+					"csrfmiddlewaretoken": "{{ csrf_token }}",
+				}
+		    	}).done(function(responseText) {
+    			    if (responseText == 's') {
+    			        alert("주문이 완료 되었습니다");
+    			    } else if(responseText == 'u') {
+    			        alert("주문을 수정 하였습니다");
+    			    } else {
+    			        alert("주문에 실패 하였습니다");
+    			    }
+    			    url = '../../meetings/' + '{{meeting.id}}/';
+				    location.href = url;
+			    	// window.location.reload();
+			    }).always(function() {
+			
+			    }).error(function(request, status, error) {
+				    alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+			    });
+        })
+        
+        $('#menu').change(function() {
+            setAmount();
+        });
+        
+        $('#quantity').change(function() {
+            setAmount();
+        });
+        
+        $('#membername').change(function() {
+            if ($('#membername').val() == 'etc') {
+                $('#membername_etc').val("");
+                $('#membername_etc').prop('readonly',false);
+            } else {
+                $('#membername_etc').val("");
+                $('#membername_etc').prop('readonly',true);
+            }
+        });
+        
+        setAmount();
+    });
+    
+    function setAmount() {
+        var value = $('#menu').val();
+        var price = menuList[value];
+        var amount = $('#quantity').val() * price;
+        $('#amount').val(amount);
+    };
+    
+    var menuList = [];
+    
+</script>
+
+<div class="container">
+    
+    <form action = "/createOrder/" method="post">
+        {% csrf_token %}
+    
+        <div class="form-group">
+            <label for="membername">이름</label>
+            <table width="100%">
+                <tr>
+                    <td>
+                        <select class="form-control" id="membername" name="membername">
+                        <option value=''>--선택--</option>
+                        <option value='이정용'>이정용</option>
+                        <option value='임미경'>임미경</option>
+                        <option value='김미경'>김미경</option>
+                        <option value='김종석'>김종석</option>
+                        <option value='이준학'>이준학</option>
+                        <option value='이정철'>이정철</option>
+                        <option value='이재환'>이재환</option>
+                        <option value='최원혁'>최원혁</option>
+                        <option value='강희정'>강희정</option>
+                        <option value='장재현'>장재현</option>
+                        <option value='조우열'>조우열</option>
+                        <option value='정진'>정진</option>
+                        <option value='이응연'>이응연</option>
+                        <option value='이은상'>이은상</option>
+                        <option value='김수경'>김수경</option>
+                        <option value='배기훈'>배기훈</option>
+                        <option value='etc'>직접입력</option>
+                    </select>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" id="membername_etc" name="membername_etc" readonly>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="form-group">
+            <label for="menu">메뉴</label>
+            <select class="form-control" id="menu" name="menu">
+            {% for menu in menus %}
+                <option value={{menu.id}}>{{menu.name}} / {{menu.price}}원</option>
+                <script>
+                    menuList['{{menu.id}}'] = '{{menu.price}}';
+                </script>
+            {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="quantity">수량</label>
+            <select class="form-control" id="quantity" name="quantity">
+                <option value=1>1</option>
+                <option value=2>2</option>
+                <option value=3>3</option>
+                <option value=4>4</option>
+                <option value=5>5</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="note">금액</label>
+          <input type="number" class="form-control" id="amount" name="amount" readonly>
+        </div>
+        
+        <div class="form-group">
+          <label for="note">비고</label>
+          <input type="text" class="form-control" id="note" name="note">
+        </div>
+        
+        <input type="hidden" id="meetingid" name="meetingid" value={{meeting.id}}>
+        <button class="btn btn-primary btn-block" id="createOrder" name="createOrder">주문</button>
+    </form>
+</div>
+{% endblock %}

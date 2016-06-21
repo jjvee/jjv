@@ -1,0 +1,75 @@
+{% extends "snctrd/layout.html" %}
+{% block title %}
+회의정보
+{% endblock %}
+
+{% block content%}
+
+<script>
+    $(function() {
+        $('#orderTable tr td a').click(function() {
+            var orderId = $(this).parent().attr('id');
+            
+            if (confirm("주문을 취소하시겠습니까?") == false) {
+                return false;
+            }
+            
+            $.ajax({
+				type : 'POST',
+				url : '/deleteOrder/',
+				data : {
+					orderid : orderId,
+					"csrfmiddlewaretoken": "{{ csrf_token }}",
+				}
+		    	}).done(function(responseText) {
+    			    url = '../../meetings/' + '{{meeting.id}}/';
+				    location.href = url;
+			    }).always(function() {
+			
+			    }).error(function(request, status, error) {
+				    url = '../../meetings/' + '{{meeting.id}}/';
+				    location.href = url;
+			    });
+        });
+    });
+    
+</script>
+
+<div class="container">
+    <h1>{{meeting.mtname}}</h1>
+    주최자 : {{meeting.mthost}}<br>
+    남김말 : {{meeting.mtmemo}}<br><br>
+    매장명 : <b>{{meeting.shop.name}}</b><br>
+    <br>
+    <table id="orderTable" class="table table-striped">
+        <thead>
+        <tr>
+            <th><B>이름</B></th>
+            <th><B>메뉴</B></th>
+            <th><B>수량</B></th>
+            <th><B>금액</B></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{order.membername}}</td>
+            <td>{{order.menu.name}}</td>
+            <td>{{order.quantity}}개</td>
+            <td id="{{order.id}}"><a href=""/>{{order.amount}}원</td>
+        </tr>
+        {% endfor %}
+        <tbody>
+    </table>
+    
+    <form action = "/order/{{meeting.id}}/" method="post">
+        {% csrf_token %}
+        <button class="btn btn-primary btn-block" name="ordButton" value="{{meeting.id}}">주문</button>
+    </form>
+    <br>
+    <form action = "/orderSummary/{{meeting.id}}/" method="post">
+        {% csrf_token %}
+        <button class="btn btn-warning btn-block" name="ordButton" value="{{meeting.id}}">요약정보</button>
+    </form>
+</div>
+{% endblock %}

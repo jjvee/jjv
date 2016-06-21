@@ -1,0 +1,33 @@
+{% extends "snctrd/layout.html" %}
+{% block title %}
+회의목록
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    <h1>회의목록</h1>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th><B>No.</B></th>
+            <th><B>회의명</B></th>
+            <th><B>장소</B></th>
+            <th><B>시작시간</B></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for meeting in meetings %}
+        <tr>
+            <td>{{meeting.id}}</td>
+            <td><a href="meetings/{{meeting.id}}/">{{meeting.mtteam}} - {{meeting.mtname}}</td>
+            <td>{{meeting.mtloca}}</td>
+            <td>
+                {{meeting.mtdate.year}}-{{meeting.mtdate.month}}-{{meeting.mtdate.day}} / {{meeting.mtdate.time}}
+            </td>
+        </tr>
+        {% endfor %}
+        <tbody>
+    </table>
+</div>
+{% endblock %}

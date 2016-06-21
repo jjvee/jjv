@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<head>
+  <title>{% block title %}{% endblock %}</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<!--<nav class="navbar navbar-default">-->
+	<!--    <div class="container-fluid">-->
+	<!--        <div class="navbar-header">-->
+	<!--            <a class="navbar-brand" href="{% url 'snctrd:home' %}">Home</a>-->
+	<!--            <a class="navbar-brand" href="/admin">Admin</a>-->
+	<!--        </div>-->
+ <!--       </div>-->
+	<!--</nav>-->
+	<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span> 
+      </button>
+      <a class="navbar-brand" href="{% url 'snctrd:home' %}">제조ITO2팀/무역</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="{% url 'snctrd:home' %}"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+        <li><a href="/admin"><span class="glyphicon glyphicon-user"></span> Admin</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+{% block content %}{% endblock %}
+</body>
+</html>
