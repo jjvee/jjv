@@ -98,7 +98,10 @@
                     <td>
                         <select class="form-control" id="membername" name="membername">
                         <option value=''>--선택--</option>
-                        <option value='이정용'>이정용</option>
+                        {% for member in members %}
+                        <option value={{member.membername}}>{{member.membername}}</option>
+                        {% endfor %}
+                        <!-- <option value='이정용'>이정용</option>
                         <option value='임미경'>임미경</option>
                         <option value='김미경'>김미경</option>
                         <option value='김종석'>김종석</option>
@@ -113,7 +116,7 @@
                         <option value='이응연'>이응연</option>
                         <option value='이은상'>이은상</option>
                         <option value='김수경'>김수경</option>
-                        <option value='배기훈'>배기훈</option>
+                        <option value='배기훈'>배기훈</option> -->
                         <option value='etc'>직접입력</option>
                     </select>
                     </td>

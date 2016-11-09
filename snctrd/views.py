@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 
-from .models import Meetings, Order, Menu
+from .models import Meetings, Order, Menu, Member
 
 import datetime
 import json
@@ -9,7 +9,8 @@ import copy
 # Create your views here.
 
 def index(request):
-    meetings = Meetings.objects.all()
+    meetings = Meetings.objects.all().order_by('-id')
+    print meetings
     context = {'meetings':meetings}
     return render(request, 'snctrd/index.html', context)
     
@@ -22,7 +23,8 @@ def meetings(request, meeting_id):
 def order(request, meeting_id):
     meeting = Meetings.objects.get(id = meeting_id)
     menus = Menu.objects.filter(shop = meeting.shop)
-    context = {'meeting':meeting, 'menus':menus}
+    members = Member.objects.all()
+    context = {'meeting':meeting, 'menus':menus, 'members':members}
     return render(request, 'snctrd/order.html', context)
     
 def createOrder(request):
