@@ -97,28 +97,12 @@
                 <tr>
                     <td>
                         <select class="form-control" id="membername" name="membername">
-                        <option value=''>--선택--</option>
-                        {% for member in members %}
-                        <option value={{member.membername}}>{{member.membername}}</option>
-                        {% endfor %}
-                        <!-- <option value='이정용'>이정용</option>
-                        <option value='임미경'>임미경</option>
-                        <option value='김미경'>김미경</option>
-                        <option value='김종석'>김종석</option>
-                        <option value='이준학'>이준학</option>
-                        <option value='이정철'>이정철</option>
-                        <option value='이재환'>이재환</option>
-                        <option value='최원혁'>최원혁</option>
-                        <option value='강희정'>강희정</option>
-                        <option value='장재현'>장재현</option>
-                        <option value='조우열'>조우열</option>
-                        <option value='정진'>정진</option>
-                        <option value='이응연'>이응연</option>
-                        <option value='이은상'>이은상</option>
-                        <option value='김수경'>김수경</option>
-                        <option value='배기훈'>배기훈</option> -->
-                        <option value='etc'>직접입력</option>
-                    </select>
+                            <option value=''>--선택--</option>
+                            {% for member in members %}
+                            <option value={{member.membername}}>{{member.membername}}</option>
+                            {% endfor %}
+                            <option value='etc'>직접입력</option>
+                        </select>
                     </td>
                     <td>
                         <input type="text" class="form-control" id="membername_etc" name="membername_etc" readonly>

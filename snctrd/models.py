@@ -21,10 +21,18 @@ class Menu(models.Model):
 	
 	def __str__(self):
 		return self.name
-	
+
+class Team(models.Model):
+	teamcode = models.CharField(max_length=10)
+	teamname = models.CharField(max_length=30)
+
+	def __str__(self):
+		txt = self.teamcode + ' / ' + self.teamname
+		return txt
 
 class Meetings(models.Model):
 	mtname = models.CharField(max_length=30)
+	team   = models.ForeignKey(Team, null=True, blank=True, default = None)
 	mtteam = models.CharField(null=True, blank=True, max_length=30)
 	mtdate = models.DateTimeField()
 	mtloca = models.CharField(null=True, blank=True, max_length=30)
@@ -34,7 +42,8 @@ class Meetings(models.Model):
 	crdate = models.DateTimeField(null=True, blank=True)
 	
 	def __str__(self):
-		return self.mtname
+		txt = self.team.teamname + ' / ' + self.mtname
+		return txt
 		
 class Order(models.Model):
 	meeting =  models.ForeignKey(Meetings, null=True, blank=True, default = None)
@@ -50,6 +59,9 @@ class Order(models.Model):
 		return text
 
 class Member(models.Model):
+	team = models.ForeignKey(Team, null=True, blank=True, default = None)
 	membername = models.CharField(max_length=30)
 	def __str__(self):
-		return self.membername
+		txt = self.team.teamname + ' / ' + self.membername
+		return txt
+

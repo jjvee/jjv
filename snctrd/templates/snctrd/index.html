@@ -7,6 +7,29 @@
 {% block content %}
 <div class="container">
     <h1>회의목록</h1>
+    <br>
+    <label for="teamcode">조직선택</label>
+    <form action = "/" method="post">
+        {% csrf_token %}
+        <select class="form-control" id="teamcode" name="teamcode" onchange="this.form.submit()">
+            {% for team in teams %}
+
+            {% if teamcode == team.teamcode %}
+            <option selected=selected value={{team.teamcode}}>{{team.teamname}}</option>
+            {% else %}
+            <option value={{team.teamcode}}>{{team.teamname}}</option>
+            {% endif %}
+            
+            {% endfor %}
+
+            {% if teamcode == 'all' %}
+            <option selected=selected value='all'>전체조회</option>
+            {% else %}
+            <option value='all'>전체조회</option>
+            {% endif %}
+        </select>
+    </form>
+    <br>
     <table class="table table-striped">
         <thead>
         <tr>
@@ -20,7 +43,12 @@
         {% for meeting in meetings %}
         <tr>
             <td>{{meeting.id}}</td>
-            <td><a href="meetings/{{meeting.id}}/">{{meeting.mtteam}} - {{meeting.mtname}}</td>
+            {% if teamcode == 'all' %}
+            <td><a href="meetings/{{meeting.id}}/">{{meeting.team.teamname}} / {{meeting.mtteam}} {% if meeting.mtteam %} - {% endif %} {{meeting.mtname}}</td>
+            {% else %}
+            <td><a href="meetings/{{meeting.id}}/">{{meeting.mtteam}} {% if meeting.mtteam %} - {% endif %} {{meeting.mtname}}</td>
+            {% endif %}
+            
             <td>{{meeting.mtloca}}</td>
             <td>
                 {{meeting.mtdate.year}}-{{meeting.mtdate.month}}-{{meeting.mtdate.day}} / {{meeting.mtdate.time}}

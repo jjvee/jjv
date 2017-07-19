@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 
-from .models import Meetings, Order, Menu, Member
+from .models import Meetings, Order, Menu, Member, Team
 
 import datetime
 import json
@@ -9,9 +9,30 @@ import copy
 # Create your views here.
 
 def index(request):
-    meetings = Meetings.objects.all().order_by('-id')
-    print meetings
-    context = {'meetings':meetings}
+    
+    teams = Team.objects.all().order_by('-id')
+
+    try :
+        request.session['teamcode'] = request.POST['teamcode']
+        teamcode = request.session['teamcode']
+    except :
+        try:
+            teamcode = request.session['teamcode']                
+        except:
+            request.session['teamcode'] = 'TRADE'
+            teamcode = request.session['teamcode']
+
+    if (teamcode):
+
+        if (teamcode == 'all'):
+            meetings = Meetings.objects.all().order_by('-id')
+        else :
+            team = Team.objects.get(teamcode = teamcode)
+            meetings = Meetings.objects.filter(team = team).order_by('-id')
+    else :
+        meetings = Meetings.objects.all().order_by('-id')
+
+    context = {'meetings':meetings, 'teams':teams, 'teamcode':teamcode}
     return render(request, 'snctrd/index.html', context)
     
 def meetings(request, meeting_id):
@@ -23,7 +44,7 @@ def meetings(request, meeting_id):
 def order(request, meeting_id):
     meeting = Meetings.objects.get(id = meeting_id)
     menus = Menu.objects.filter(shop = meeting.shop)
-    members = Member.objects.all()
+    members = Member.objects.filter(team = meeting.team)
     context = {'meeting':meeting, 'menus':menus, 'members':members}
     return render(request, 'snctrd/order.html', context)
     
